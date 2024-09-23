@@ -4,14 +4,26 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Flask Stock Portfolio App</title>
+    <title>Flask Basic App</title>
+        <style>
+        nav a {
+            color: #d64161;
+            font-size: 3em;
+            margin-left: 50px;
+            text-decoration: none;
+        }
+    </style>
   </head>
 
   <body>
     <header>
-      <h1>Flask Stock Portfolio App</h1>
+      <h1>Flask Basic App</h1>
     </header>
-
+    <nav>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+    </nav>
+    <hr>
     <main>
       <!-- child template -->
       {% block content %}

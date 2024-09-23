@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from flask import session
-from pydantic import BaseModel, field_validator, ValidationError
+
 
 app = Flask(__name__)
 app.secret_key = 'BAD_SECRET_KEY'  # It's important to ensure that the secret key remains a secret that cannot be easily guessed.
@@ -8,7 +8,7 @@ app.secret_key = 'BAD_SECRET_KEY'  # It's important to ensure that the secret ke
 
 @app.route('/')
 def index():
-    return 'Hello World!'
+    return render_template("home.html")
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -52,21 +52,11 @@ def add_stock():
         for key, value in request.form.items():
             print(f'{key}: {value}')
 
-        try:
-            stock_data = StockModel(
-                stock_symbol=request.form['stock_symbol'],
-                number_of_shares=request.form['number_of_shares'],
-                purchase_price=request.form['purchase_price']
-            )
-            print(stock_data)
-
             # Save the form data to the session object
-            session['stock_symbol'] = stock_data.stock_symbol
-            session['number_of_shares'] = stock_data.number_of_shares
-            session['purchase_price'] = stock_data.purchase_price
+            session['stock_symbol'] = request.form['stock_symbol']
+            session['number_of_shares'] = request.form['number_of_shares']
+            session['purchase_price'] = request.form['purchase_price']
 
-        except ValidationError as e:
-            print(e)
 
     return render_template('add_stocks.html')
 
@@ -74,19 +64,6 @@ def add_stock():
 @app.route('/stocks/')
 def list_stocks():
     return render_template('stocks.html')
-
-
-class StockModel(BaseModel):
-    """Class for parsing new stock data from a form."""
-    stock_symbol: str
-    number_of_shares: int
-    purchase_price: float
-
-    @field_validator('stock_symbol')
-    def stock_symbol_check(cls, value):
-        if not value.isalpha() or len(value) > 5:
-            raise ValueError('Stock symbol must be 1-5 characters')
-        return value.upper()
 
 
 @app.get('/about')
