@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p>Hello {{ session['user_id'][0] }}</p>
+
+<p>Hello {{ session['user_name'] }}</p>
 {% endblock %}
